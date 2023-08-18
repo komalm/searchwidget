@@ -14,7 +14,7 @@ export interface SelectProps {
     OptionStyle?: {};
     OptionDivStyle?: {};
     select?: {};
-    OptionsItem?: {};
+    OptionsItem?: {} ;
   };
   FiltersArray: Array<FiltersArraySelectedOptionObject>;
   setFiltersArray: (...args: any[]) => any;
