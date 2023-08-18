@@ -1,5 +1,4 @@
-import React from 'react';
-import { styled } from 'styled-components';
+import React,{ styled } from 'styled-components';
 
 export interface TailwindCardProps {
   name: string;
@@ -41,11 +40,13 @@ const Container = styled.div`
     cursor: pointer;
   }
   width: 98%;
+  width: 23rem;
+  /* height: fit-content; */
   @media (min-width: 1024px) {
     margin-top: 0;
     margin-bottom: 0;
-    width: 22rem;
-    height: 12rem;
+    width: 21rem;
+    height: 11.5rem;
   }
   @media screen and (max-width: 500px) {
     width: 23rem;
@@ -158,7 +159,7 @@ const DetailDesc = styled.dd`
   color: #6b7280;
 `;
 
-export const TailwindCard = ({
+export const Card = ({
   name,
   image,
   type,
@@ -168,42 +169,50 @@ export const TailwindCard = ({
   styles,
 }: TailwindCardProps) => {
   return (
-    <Container style={styles?.container}>
-      <TopContent style={styles?.headingDiv}>
-        <div>
-          <Link style={styles?.heading}>{name}</Link>
-          <Type style={styles?.type}>{type}</Type>
-        </div>
-        <ImageDiv style={styles?.imageDiv}>
-          <Image
-            style={styles?.image}
-            src={
-              image
-                ? image
-                : 'https://static.vecteezy.com/system/resources/previews/004/141/669/original/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'
+    <div hidden={name === ''}>
+      <Container style={styles?.container}>
+        <TopContent style={styles?.headingDiv}>
+          <div>
+            <Link style={styles?.heading}>{name}</Link>
+            {type && <Type style={styles?.type}>{type}</Type>}
+          </div>
+          <ImageDiv style={styles?.imageDiv}>
+            <Image
+              style={styles?.image}
+              src={
+                image
+                  ? image
+                  : 'https://static.vecteezy.com/system/resources/previews/004/141/669/original/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'
+              }
+            />
+          </ImageDiv>
+        </TopContent>
+        <div style={{ marginTop: '10px' }}>
+          <div hidden={tags?.length === 0}>
+            <TagsDiv style={styles?.tagsDiv}>
+              {tags?.map((tag, idx) => (
+                <Tags style={styles?.tag} key={idx + 1}>
+                  {tag}
+                </Tags>
+              ))}
+            </TagsDiv>
+          </div>
+          <LowerDiv style={styles?.LowerDiv}>
+            {subject &&
+              <LowerItem style={styles?.LowerItem}>
+                <DescType style={styles?.LowerDT}>Subject</DescType>
+                <DetailDesc style={styles?.LowerDD}>{subject}</DetailDesc>
+              </LowerItem>
             }
-          />
-        </ImageDiv>
-      </TopContent>
-      <div style={{ marginTop: '10px' }}>
-        <TagsDiv style={styles?.tagsDiv}>
-          {tags?.map((tag, idx) => (
-            <Tags style={styles?.tag} key={idx + 1}>
-              {tag}
-            </Tags>
-          ))}
-        </TagsDiv>
-        <LowerDiv style={styles?.LowerDiv}>
-          <LowerItem style={styles?.LowerItem}>
-            <DescType style={styles?.LowerDT}>Subject</DescType>
-            <DetailDesc style={styles?.LowerDD}>{subject}</DetailDesc>
-          </LowerItem>
-          <LowerItem style={styles?.LowerItem}>
-            <DescType style={styles?.LowerDT}>Publisher</DescType>
-            <DetailDesc style={styles?.LowerDD}>{publisher}</DetailDesc>
-          </LowerItem>
-        </LowerDiv>
-      </div>
-    </Container>
+            {publisher &&
+              <LowerItem style={styles?.LowerItem}>
+                <DescType style={styles?.LowerDT}>Publisher</DescType>
+                <DetailDesc style={styles?.LowerDD}>{publisher}</DetailDesc>
+              </LowerItem>
+            }
+          </LowerDiv>
+        </div>
+      </Container>
+    </div>
   );
 };
