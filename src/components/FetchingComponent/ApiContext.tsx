@@ -1,168 +1,36 @@
-import React, { ReactNode, useEffect } from "react";
-import { fetchData } from "../../api/api";
-import useState from "react-usestateref";
-import { Filter } from "../Filter";
-import { Select } from "../Filter/Select";
-import { styled } from "styled-components";
-import { Card } from "../card/Card";
+import React, { useEffect } from 'react';
+import { fetchData } from '../../api/api';
+import useState from 'react-usestateref';
+import { Filter } from '../Filter';
+import { Select } from '../Filter/Select';
+import { Card } from '../card/Card';
+import { Button, FiltersDiv, ListDiv, MainDiv, ResetButton, Sidebar } from "../styled-components/ContextElements"
+
 import {
   CardFieldsRender,
   FilterDataExtract,
+  MasterFieldContentChange,
   RenderContentFunction,
   TermsFetch,
+  DependentTermsFetch,
   UpdateConfig,
-} from "../../api/Service_Function";
+  FrameworksOptionsRender,
+  GetFrameWorkID
+} from '../../api/Service_Function';
+import { ApiContextProps } from '../../interfaces/interface';
+import { SingleSelect } from '../Filter/SingleSelect';
 
-interface StyleProps {
-  apiContextDiv: {};
-  FilterComponent: {};
-  CardStyle: {};
-}
-
-const MainDiv = styled.div`
-  display: flex;
-  column-gap: 20px;
-  @media (max-width: 500px) {
-    display: flex;
-    flex-direction: column;
-    row-gap: 20px;
-    justify-content: center;
-    align-items: center;
-  }
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  border-radius: 15px;
-  background-color: #e9e8d9;
-  color: black;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  position: absolute;
-  left: 5px;
-  top: 10px;
-  width: 7rem;
-  display: none;
-  @media (max-width: 500px) {
-    display: block;
-  }
-`;
-
-const FiltersDiv = styled.div<{ showfilter: boolean }>`
-  height: max-content;
-  position: relative;
-  top: 10px;
-  left: 10px;
-  @media screen and (max-width: 500px) {
-    display: ${(props: any) => (props?.showfilter ? "none" : "block")};
-    position: absolute;
-    top: 55px;
-    left: 10px;
-  }
-`;
-
-const Sidebar = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const ListDiv = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  @media (max-width: 500px) {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 50px;
-  }
-`;
-
-const ResetButton = styled.button`
-  border: none;
-  color: black;
-  font-size: 15px;
-  font-weight: 700;
-  position: relative;
-  left: 104px;
-  cursor: pointer;
-  top: 10px;
-  background: transparent;
-`;
-
-interface FilterConfigProps {
-  name: string;
-  field: string;
-  isEnabled?: boolean;
-}
-
-// interface CardConfigProps {
-//   name: "image" | "type" | "subject" | "name" | "publisher" | "tags";
-//   TagsFieldArray?: Array<string>;
-//   field?: string;
-//   isEnabled?: boolean;
-// }
-
-type CardFieldsObject = {
-  name?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  type?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  subject?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  image?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  publisher?: {
-    field: string;
-    isEnabled?: boolean;
-  };
-  tags?: {
-    TagsFieldArray: Array<string>;
-    isEnabled?: boolean;
-  };
-};
-
-interface ApiContextProps {
-  children?: ReactNode;
-  headers?: {};
-  body?: string;
-  Formurl: string;
-  Contenturl: string;
-  CardFieldsProps: CardFieldsObject;
-  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-  cache:
-  | "default"
-  | "no-store"
-  | "reload"
-  | "force-cache"
-  | "only-if-cached"
-  | "no-cache";
-  styles?: StyleProps;
-  filterConfig: Array<FilterConfigProps>;
-  addtionalFilterConfig?: Array<FilterConfigProps> | undefined;
-  Termsurl: string;
-}
 export const ApiContext = ({
   children,
-  headers,
-  body,
   Formurl,
-  Contenturl,
-  method,
+  SearchAPI,
   cache,
+  hostname,
   styles,
   filterConfig,
-  Termsurl,
+  TermsAPI,
   addtionalFilterConfig,
+  Frameworks,
   CardFieldsProps,
 }: ApiContextProps) => {
   // Content or Data
@@ -178,6 +46,11 @@ export const ApiContext = ({
     Array<object>
   >([{}]);
 
+  // Dependent Terms Data
+  const [DependentTermsData, setDependentTermsData, DependentTermsRef] = useState<
+    Array<object>
+  >([{}]);
+
   const [FiltersArray, setFiltersArray, FiltersArrayRef] = useState([
     {
       name: "",
@@ -188,8 +61,17 @@ export const ApiContext = ({
   // Filter Showing Toggle
   const [showFilter, setShowFilter] = useState<boolean>(false);
 
+  // FrameWorks Options
+  const [FrameworkOptions, setFrameWorkOptions, FrameworkOptionsRef] = useState<Array<string>>([]);
+
+  // Framework
+  const [Framework, setFrameWork, FrameworkRef] = useState<string>("");
+
   // Resetting the filters
   const [reset, setReset] = useState<boolean>(false);
+
+  // Filters Set and API Call
+  const [FiltersSet, setFiltersSet, FiltersSetRef] = useState<any>(SearchAPI.body);
 
   // Adding The Filters
   const [addfilter, setaddfilter, addfilterRef] = useState<Array<number>>([]);
@@ -215,17 +97,17 @@ export const ApiContext = ({
       filtersOptionData,
       filterConfigState,
       MasterFieldsTerms,
-      MasterKeys
+      MasterKeys,
+      FiltersSet,
+      DependentTermsData,
+      FrameworkOptions
     );
   }
 
   function FetchAndUpdateFilterConfig() {
     fetchData({
-      headers: headers,
-      body: body,
       url: Formurl,
       cache: cache,
-      method: method,
     })
       .then((res: any) => {
         setFilterConfig(res);
@@ -241,32 +123,30 @@ export const ApiContext = ({
       .catch((err: any) => {
         console.log(err);
       });
-
+    const FrameworkID = FrameworkRef.current === "" ? "ekstep_ncert_k-12" : GetFrameWorkID(Frameworks, FrameworkRef.current);
     fetchData({
-      url: Contenturl,
-      cache,
-      method,
-      body,
-      headers,
+      url: `${hostname}/api/content/v1/search?orgdetails=orgName,email&framework=${FrameworkID}`,
+      cache: "default",
+      method: SearchAPI.method,
+      body: SearchAPI.body,
+      headers: SearchAPI.headers
     })
       .then((res) => {
-        setcontent(res);
-        FilterDataRender();
+        setcontent(res.result.content);
       })
       .catch((err) => {
         console.log(err);
       });
 
     fetchData({
-      url: Termsurl,
+      url: `${hostname}/api/framework/v1/read/${FrameworkID}?categories=board,gradeLevel,medium,class,subject`,
       cache,
-      method,
-      body,
-      headers,
+      method: TermsAPI.method,
+      body: TermsAPI.body,
+      headers: TermsAPI.headers,
     })
       .then((res) => {
         TermsFetch(res, setMasterFieldsTerms, filterConfigRef.current);
-        // console.log(MasterFieldsTermsRef.current);
         setMasterKeys(Object.keys(MasterFieldsTermsRef.current[0]));
       })
       .catch((err) => {
@@ -274,7 +154,83 @@ export const ApiContext = ({
       });
   }
 
-  console.log(FiltersArrayRef.current);
+  useEffect(() => {
+    const FrameworkID = FrameworkRef.current === "" ? "ekstep_ncert_k-12" : GetFrameWorkID(Frameworks, FrameworkRef.current);
+    fetchData({
+      url: `${hostname}/api/framework/v1/read/${FrameworkID}?categories=board,gradeLevel,medium,class,subject`,
+      cache,
+      method: TermsAPI.method,
+      body: TermsAPI.body,
+      headers: TermsAPI.headers,
+    })
+      .then((res) => {
+        const data = DependentTermsFetch(res, FiltersArrayRef.current, MasterFieldsTermsRef.current);
+        setDependentTermsData(data);
+        let flag = true;
+
+        FiltersArrayRef.current.map((item: any) => {
+          if (item?.value.length !== 0) {
+            flag = false;
+          }
+        });
+
+        if (flag) {
+          fetchData({
+            url: `${hostname}/api/framework/v1/read/${FrameworkID}?categories=board,gradeLevel,medium,class,subject`,
+            cache,
+            method: TermsAPI.method,
+            headers: TermsAPI.headers,
+          })
+            .then((res) => {
+              // console.log(res);
+              TermsFetch(res, setMasterFieldsTerms, filterConfigRef.current);
+              // console.log(MasterFieldsTermsRef.current[0]);
+              setMasterKeys(Object.keys(MasterFieldsTermsRef.current[0]));
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+        else {
+          setMasterFieldsTerms(DependentTermsRef.current);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [addfilterRef.current, FrameworkRef.current]);
+
+  useEffect(() => {
+    const FrameworkID = FrameworkRef.current === "" ? "ekstep_ncert_k-12" : GetFrameWorkID(Frameworks, FrameworkRef.current);
+    fetchData({
+      url: `${hostname}/api/content/v1/search?orgdetails=orgName,email&framework=${FrameworkRef.current === "" ? "ekstep_ncert_k-12" : FrameworkID}`,
+      cache: "default",
+      method: SearchAPI.method,
+      body: FiltersSetRef.current,
+      headers: SearchAPI.headers
+    })
+      .then((res) => {
+        if (res.result.content !== undefined) {
+          setcontent(res.result.content);
+          FilterDataRender();
+        }
+        else if (res.result.QuestionSet !== undefined) {
+          setcontent(res.result.QuestionSet);
+          FilterDataRender();
+        }
+        else {
+          setcontent(contentRef.current);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [FiltersSetRef.current]);
+
+  useEffect(() => {
+    MasterFieldContentChange(FiltersArrayRef.current, filterConfig, SearchAPI.body, setFiltersSet);
+    FilterDataRender();
+  }, [addfilterRef.current, FrameworkRef.current]);
 
   function FilterDataRender() {
     // optionName wali field
@@ -289,8 +245,8 @@ export const ApiContext = ({
 
   useEffect(() => {
     setFiltersArray([]);
+    FetchAndUpdateFilterConfig();
   }, [reset]);
-
   useEffect(() => {
     RenderContentFunction({
       content: contentRef.current,
@@ -299,11 +255,23 @@ export const ApiContext = ({
       filterConfig: filterConfigRef.current,
       RenderContent,
     });
-  }, [addfilterRef.current]);
+  }, [addfilterRef.current, FrameworkRef.current]);
+
 
   useEffect(() => {
     FetchAndUpdateFilterConfig();
   }, []);
+
+  useEffect(() => {
+    FetchAndUpdateFilterConfig();
+  }, [FrameworkRef.current]);
+
+  useEffect(() => {
+    if (Frameworks[0] !== undefined && Frameworks[0] !== '') {
+      const FrameWorksOption = FrameworksOptionsRender(Frameworks);
+      setFrameWorkOptions(FrameWorksOption);
+    }
+  }, [Frameworks]);
 
   return (
     <MainDiv style={styles?.apiContextDiv}>
@@ -313,9 +281,24 @@ export const ApiContext = ({
         <FiltersDiv showfilter={showFilter}>
           <Filter>
             <ResetButton onClick={() => setReset(!reset)}>Reset</ResetButton>
+            {
+              FrameworkOptionsRef.current.length !== 0 && (
+                <SingleSelect
+                  Framework={Framework}
+                  setFramework={setFrameWork}
+                  FiltersArray={FiltersArrayRef.current}
+                  setFiltersArray={setFiltersArray}
+                  options={FrameworkOptionsRef.current}
+                  optionName={"Board".toUpperCase()}
+                  Reset={reset}
+                  styles={styles?.SingleSelectStyle}
+                />
+              )
+            }
             {MasterKeysRef.current?.map((MasterField: any, index) => {
               const item: any =
-                MasterFieldsTermsRef.current[0][MasterField as keyof {}];
+                MasterFieldsTermsRef?.current[0][MasterField as keyof {}];
+              // console.log(item?.terms.sort());
               return (
                 <Select
                   key={index}
@@ -334,7 +317,8 @@ export const ApiContext = ({
               const item: any = FiltersOptionRef.current.filter(
                 (filter: any) => filter?.name === name
               )[0];
-              if (item !== null && item !== undefined){
+              if (item !== null && item !== undefined)
+                // console.log(item?.value);
                 return (
                   <Select
                     key={index}
@@ -347,10 +331,7 @@ export const ApiContext = ({
                     setArrayNumber={setaddfilter}
                   />
                 );
-              }
-              else{
-                return null;
-              }
+              else return null;
             })}
           </Filter>
         </FiltersDiv>
@@ -359,7 +340,7 @@ export const ApiContext = ({
         {(RenderContentRef.current.length !== 0
           ? RenderContent
           : contentRef.current
-        ).map((item, idx) => {
+        )?.map((item, idx) => {
           const DataObj = CardFieldsRender(item, CardFieldsProps);
           return (
             <Card
