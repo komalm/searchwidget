@@ -1,10 +1,36 @@
 import React from 'react';
 
 export interface StyleProps {
-  apiContextDiv: {};
-  FilterComponent: {};
-  CardStyle: {};
-  SingleSelectStyle: {};
+  apiContextDiv?: {
+    Container?: {};
+    Sidebar?: {};
+    FiltersDiv?: {};
+    Filter?: {};
+    Button?: {};
+    ListDiv?: {};
+  };
+  SelectStyle?: {
+    container?: {};
+    OptionNameStyle?: {};
+    OptionStyle?: {};
+    OptionDivStyle?: {};
+    select?: {};
+    OptionsItem?: {};
+  };
+  CardStyle?: {
+    container?: {};
+    headingDiv?: {};
+    heading?: {};
+    type?: {};
+    imageDiv?: {};
+    image?: {};
+    tagsDiv?: {};
+    LowerDiv?: {};
+    LowerItem?: {};
+    LowerDT?: {};
+    LowerDD?: {};
+    tag?: {};
+  };
 }
 
 export interface FilterConfigProps {
@@ -39,6 +65,58 @@ export type CardFieldsObject = {
     isEnabled?: boolean;
   };
 };
+
+export interface WrapperProps {
+  hostname: string;
+  DefaultChannel: {
+    url: string;
+    method: string;
+    cache:
+      | 'default'
+      | 'no-store'
+      | 'reload'
+      | 'force-cache'
+      | 'only-if-cached'
+      | 'no-cache';
+    header: object;
+  };
+  GetChannel: {
+    method: string;
+    cache:
+      | 'default'
+      | 'no-store'
+      | 'reload'
+      | 'force-cache'
+      | 'only-if-cached'
+      | 'no-cache';
+    header: object;
+  };
+  SearchAPI: {
+    url: string;
+    headers: object;
+    method: string;
+    body: string;
+  };
+  TermsRead: {
+    url: string;
+    headers: object;
+    method: string;
+    body: string;
+  };
+  children?: React.ReactNode;
+  Formurl: string;
+  CardFieldsProps: CardFieldsObject;
+  cache:
+    | 'default'
+    | 'no-store'
+    | 'reload'
+    | 'force-cache'
+    | 'only-if-cached'
+    | 'no-cache';
+  styles?: StyleProps;
+  filterConfig: Array<FilterConfigProps>;
+  addtionalFilterConfig?: Array<FilterConfigProps> | undefined;
+}
 
 export interface ApiContextProps {
   children?: React.ReactNode;

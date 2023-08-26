@@ -1,4 +1,4 @@
-import { FilterConfigProps } from "./interface";
+import { FilterConfigProps } from './interface';
 
 export interface UpdateConfigProps {
   apiData: Array<any>;
