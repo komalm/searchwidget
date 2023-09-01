@@ -17,6 +17,7 @@ export const Wrapper = ({
   styles,
   filterConfig,
   addtionalFilterConfig,
+  YourCard,
 }: WrapperProps) => {
   const [defaultChannel, setdefaultChannel, defaultChannelRef] = useStateRef<
     string
@@ -73,11 +74,11 @@ export const Wrapper = ({
           method: SearchAPI.method,
         }}
         TermsAPI={{
-          url: TermsRead.url,
           headers: TermsRead.headers,
           method: TermsRead.method,
         }}
         hostname={hostname}
+        YourCard={YourCard}
         filterConfig={filterConfig}
         children={children}
         cache={cache === undefined ? 'default' : cache}

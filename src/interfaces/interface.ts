@@ -68,6 +68,7 @@ export type CardFieldsObject = {
 
 export interface WrapperProps {
   hostname: string;
+  YourCard?: React.ReactNode;
   DefaultChannel: {
     url: string;
     method: string;
@@ -120,6 +121,7 @@ export interface WrapperProps {
 
 export interface ApiContextProps {
   children?: React.ReactNode;
+  YourCard?: React.ReactNode;
   Formurl: string;
   SearchAPI: {
     url: string;
@@ -140,7 +142,6 @@ export interface ApiContextProps {
   filterConfig: Array<FilterConfigProps>;
   addtionalFilterConfig?: Array<FilterConfigProps> | undefined;
   TermsAPI: {
-    url: string;
     method: string;
     headers?: object;
     body?: string;
