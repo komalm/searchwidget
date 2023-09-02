@@ -21,6 +21,7 @@ export class FiltersComponentComponent implements OnInit {
   @Input() OptionValue: Array<string> = [];
   @Input() FilterConfig: Array<any> = [];
   @Input() AddtionalFilterConfig: Array<any> = [];
+  @Input() AllFiltersArray: Array<any> = [];
 
   OptionOb: Array<{ name: string; Options: boolean }> = [];
 
@@ -92,7 +93,7 @@ export class FiltersComponentComponent implements OnInit {
   Reset() {
     this.FiltersArray = [];
   }
-
+  Check: any = [];
   IsSingleSelect(OptionName: string) {
     let flag = false;
     this.FilterConfig.map((item) => {
@@ -133,6 +134,7 @@ export class FiltersComponentComponent implements OnInit {
     const lastIdx = this.AddFilterNumber.length;
     this.AddFilterNumber.push(this.AddFilterNumber[lastIdx - 1] + 1);
     this.AddFilterNumberEvent.emit(this.AddFilterNumber);
+    this.Check = [...this.Check, ...this.FiltersArray];
     this.FiltersArrayEvent.emit(this.FiltersArray);
   }
 
@@ -158,5 +160,7 @@ export class FiltersComponentComponent implements OnInit {
     this.OptionOb = arr;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.OptionShowHide();
+  }
 }

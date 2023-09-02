@@ -16,10 +16,9 @@ import {
   TermsFetch,
   UpdateConfig,
 } from '../../Functions/Service_Functions';
-// import { SearchAPI, TermsRead } from './AllAPI';
 
 @Component({
-  selector: 'lib-wrapper',
+  selector: 'app-wrapper',
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.css'],
 })
@@ -107,9 +106,9 @@ export class WrapperComponent implements OnInit, OnChanges {
 
   FetchAndUpdateFilterConfig() {
     fetchData({
-      url: 'http://localhost:3000/form',
-      cache: 'default',
-      method: 'GET',
+      url: this.FormAPI.url,
+      cache: this.FormAPI.cache ? this.FormAPI.cache : 'default',
+      method: this.FormAPI.method,
     })
       .then((res: any) => {
         this.ApiSettedFilterConfig = UpdateConfig({
@@ -214,18 +213,18 @@ export class WrapperComponent implements OnInit, OnChanges {
     this.FrameworksOptionArray = FrameWorksOption;
   }
 
-  MasterBodyContentChange(AllFiltersArray: any) {
+  MasterBodyContentChange() {
     this.FilterBodySet = MasterFieldContentChange(
-      AllFiltersArray !== undefined && AllFiltersArray.length !== 0
-        ? AllFiltersArray
+      this.AllFiltersArray !== undefined && this.AllFiltersArray.length !== 0
+        ? this.AllFiltersArray
         : this.FiltersArray,
       this.FilterConfig,
       this.SearchAPI.body ? this.SearchAPI.body : ''
     );
-    this.FilterDataRender();
   }
 
   FiltersContentRender() {
+    this.MasterBodyContentChange();
     const FrameworkID =
       this.Framework === ''
         ? 'ekstep_ncert_k-12'
@@ -266,7 +265,12 @@ export class WrapperComponent implements OnInit, OnChanges {
     this.FilterOptionsData = ReturnData.OptionValueArray;
 
     this.FilterOptionNameArray = ReturnData.OptionNameArray;
-    console.log(ReturnData);
+    this.AllOptions.map((item: any) => {
+      if (this.FilterOptionNameArray.includes(item.name)) {
+        const idx = this.FilterOptionNameArray.indexOf(item.name);
+        item.terms = this.FilterOptionsData[idx].terms;
+      }
+    });
     return ReturnData;
   }
   AddtionalContent: any;
@@ -276,7 +280,6 @@ export class WrapperComponent implements OnInit, OnChanges {
       filtersSelected: this.FiltersArray,
       filterConfig: this.ApiSettedFilterConfig,
     });
-    console.log('AddtionalContent', this.AddtionalContent);
   }
 
   AdditionalOptionValueReturn(Key: string) {
@@ -314,11 +317,6 @@ export class WrapperComponent implements OnInit, OnChanges {
     this.FetchAndUpdateFilterConfig();
     this.RenderContentAddtionalFilter();
     this.FrameWorksFetch();
-    this.FilterDataRender();
-    console.log('Search', this.SearchAPI);
-    console.log('Form', this.FormAPI);
-    console.log('Terms', this.TermsAPI);
-    console.log('FilterCOnfig', this.FilterConfig);
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.FetchAndUpdateFilterConfig();
@@ -363,9 +361,17 @@ export class WrapperComponent implements OnInit, OnChanges {
     });
     if (flag) {
       this.AllFiltersArray.push(ele);
-    } else if (this.IsAddtionalFilter(ele.name)) {
+    } else {
       this.AllFiltersArray.map((item: any) => {
-        if (item.name === ele.name) {
+        if (ele.name === 'Board') {
+          if (item.name === 'Board') {
+            if (item.value[0] === ele.value[0]) {
+              item.value = [];
+            } else {
+              item.value = ele.value;
+            }
+          }
+        } else if (this.IsAddtionalFilter(ele.name)) {
           const oldArr = item.value;
           if (oldArr.includes(ele.value[0])) {
             oldArr.splice(oldArr.indexOf(ele.value[0]), 1);
@@ -387,13 +393,17 @@ export class WrapperComponent implements OnInit, OnChanges {
     //   oldArr.push({ name: ele.name, value: [ele.value] });
     //   this.AllFiltersArray = oldArr;
     // }
+    // if(this.AllFiltersArray.length!==0){
+    //   this.AllFiltersArray.map((item:any)=>{
+    //     if(item.name==='Board'){
+    //     }
+    //   })
+    // }
     this.FiltersArray = this.AllFiltersArray;
-
-    this.MasterBodyContentChange(this.AllFiltersArray);
+    this.MasterBodyContentChange();
     this.DependentFieldsRender();
     this.FrameWorksFetch();
     this.FiltersContentRender();
-    this.FilterDataRender();
     this.RenderContentAddtionalFilter();
 
     let MasterFieldsArray: Array<any> = [];

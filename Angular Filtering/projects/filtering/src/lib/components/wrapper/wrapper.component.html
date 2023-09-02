@@ -2,21 +2,21 @@
   <div class="faKsuq">
     <div class="sidebar" *ngIf="AllOptions.length !== 0">
       <div *ngFor="let Field of AllOptions">
-        <app-filters
+        <lib-filters-component
           [Name]="Field.name"
           [OptionValue]="Field.terms"
           (FiltersArrayEvent)="LOG($event)"
           [AddtionalFilterConfig]="AddtionalFilterConfig"
           [FilterConfig]="FilterConfig"
         >
-        </app-filters>
+        </lib-filters-component>
       </div>
     </div>
   </div>
   <div class="listDiv">
     <ng-container *ngIf="AddtionalContent.length === 0">
       <div *ngFor="let item of content">
-        <app-cards
+        <lib-cards-component
           [name]="this.CardsFieldCheck('name', item)"
           [image]="this.CardsFieldCheck('image', item)"
           [type]="this.CardsFieldCheck('type', item)"
@@ -24,12 +24,12 @@
           [tags]="this.CardsFieldCheck('tags', item)"
           [publisher]="this.CardsFieldCheck('publisher', item)"
         >
-        </app-cards>
+        </lib-cards-component>
       </div>
     </ng-container>
     <ng-container *ngIf="AddtionalContent.length !== 0">
       <div *ngFor="let item of AddtionalContent">
-        <app-cards
+        <lib-cards-component
           [name]="this.CardsFieldCheck('name', item)"
           [image]="this.CardsFieldCheck('image', item)"
           [type]="this.CardsFieldCheck('type', item)"
@@ -37,7 +37,7 @@
           [tags]="this.CardsFieldCheck('tags', item)"
           [publisher]="this.CardsFieldCheck('publisher', item)"
         >
-        </app-cards>
+        </lib-cards-component>
       </div>
     </ng-container>
   </div>
