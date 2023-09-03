@@ -1,6 +1,6 @@
 {
-  "name": "filtering-angular-package",
-  "version": "0.0.5",
+  "name": "angular-sunbird-filtering",
+  "version": "0.0.8",
   "peerDependencies": {
     "@angular/common": "^11.2.14",
     "@angular/core": "^11.2.14"

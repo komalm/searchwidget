@@ -1,5 +1,7 @@
 <div class="mainDiv">
-  <div class="faKsuq">
+  <button class="button" (click)="FilterShow()">Filter</button>
+  <div id="sidebar" class="faKsuq hide">
+    <button class="reset" (click)="Reset()">Reset</button>
     <div class="sidebar" *ngIf="AllOptions.length !== 0">
       <div *ngFor="let Field of AllOptions">
         <lib-filters-component
@@ -8,6 +10,7 @@
           (FiltersArrayEvent)="LOG($event)"
           [AddtionalFilterConfig]="AddtionalFilterConfig"
           [FilterConfig]="FilterConfig"
+          [AllFiltersArray]="AllFiltersArray"
         >
         </lib-filters-component>
       </div>

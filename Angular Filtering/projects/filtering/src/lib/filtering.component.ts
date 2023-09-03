@@ -1,24 +1,41 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { fetchData } from './Functions/api';
 
+export function Required(target: object, propertyKey: string) {
+  Object.defineProperty(target, propertyKey, {
+    get() {
+      throw new Error(`Attribute ${propertyKey} is required`);
+    },
+    set(value) {
+      Object.defineProperty(target, propertyKey, {
+        value,
+        writable: true,
+        configurable: true,
+      });
+    },
+    configurable: true,
+  });
+}
+
 @Component({
   selector: 'lib-filtering',
   templateUrl: './filtering.component.html',
 })
 export class FilteringComponent implements OnInit {
   constructor() {}
-  @Input() hostname: string = 'https://www.diksha.gov.in';
+  @Input() @Required hostname: string = '';
+  @Input() @Required FrameworkFieldName: string = '';
   @Input() AddtionalFilterConfig: Array<{
     name: string;
     field: string;
     isEnabled: boolean;
   }> = [];
-  @Input() FilterConfig: Array<{
+  @Input() @Required FilterConfig: Array<{
     name: string;
     field: string;
     isEnabled: boolean;
   }> = [];
-  @Input() CardsFieldsObject: {
+  @Input() @Required CardsFieldsObject: {
     name?: {
       field: string;
     };
@@ -38,7 +55,7 @@ export class FilteringComponent implements OnInit {
       field: string;
     };
   } = {};
-  @Input() FormAPI: {
+  @Input() @Required FormAPI: {
     url: string;
     headers?: object;
     method: string;
@@ -57,7 +74,7 @@ export class FilteringComponent implements OnInit {
     body: '',
     cache: 'default',
   };
-  @Input() SearchAPI: {
+  @Input() @Required SearchAPI: {
     url: string;
     headers?: object;
     method: string;
@@ -76,7 +93,7 @@ export class FilteringComponent implements OnInit {
     body: '',
     cache: 'default',
   };
-  @Input() TermsAPI: {
+  @Input() @Required TermsAPI: {
     url: string;
     headers?: object;
     method: string;
@@ -95,7 +112,7 @@ export class FilteringComponent implements OnInit {
     body: '',
     cache: 'default',
   };
-  @Input() GetDefaultChannel: {
+  @Input() @Required GetDefaultChannel: {
     url: string;
     headers?: object;
     method: string;
@@ -114,7 +131,7 @@ export class FilteringComponent implements OnInit {
     body: '',
     cache: 'default',
   };
-  @Input() GetChannelAPI: {
+  @Input() @Required GetChannelAPI: {
     headers?: object;
     method: string;
     body?: string;

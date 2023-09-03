@@ -35,13 +35,11 @@ export class WrapperComponent implements OnInit, OnChanges {
   MasterKeys: Array<string> = [];
   CardDataObj: { [key: string]: any } = {};
   CardsData: Array<object> = [];
-  PrevFilterAddNumber: Array<number> = [];
   FrameworksOptionArray: Array<any> = [];
   FilterOptionNameArray: Array<string> = [];
-  @Input() Change: number = 0;
-  @Input() FilterAddNumber: Array<number> = [];
   @Input() FiltersArray: Array<any> = [];
   @Input() Framework: string = '';
+  @Input() FrameworkFieldName: string = '';
   @Input() FrameworksArray: Array<any> = [];
   @Input() hostname: string = '';
   @Input() FormAPI: {
@@ -153,6 +151,17 @@ export class WrapperComponent implements OnInit, OnChanges {
       });
   }
 
+  Reset() {
+    this.FiltersArray = [];
+    this.AllFiltersArray = [];
+    this.FetchAndUpdateFilterConfig();
+    this.DependentFieldsRender();
+    this.FrameWorksFetch();
+    this.FiltersContentRender();
+    this.RenderContentAddtionalFilter();
+    this.FilterDataRender();
+  }
+
   DependentFieldsRender() {
     const FrameworkID =
       this.Framework === ''
@@ -211,6 +220,17 @@ export class WrapperComponent implements OnInit, OnChanges {
   FrameWorksFetch() {
     const FrameWorksOption = FrameworksOptionsRender(this.FrameworksArray);
     this.FrameworksOptionArray = FrameWorksOption;
+  }
+
+  FilterShow() {
+    const element = document.getElementById('sidebar');
+    if (element?.classList.contains('show')) {
+      element.classList.remove('show');
+      element.classList.add('hide');
+    } else {
+      element?.classList.remove('hide');
+      element?.classList.add('show');
+    }
   }
 
   MasterBodyContentChange() {
@@ -329,7 +349,7 @@ export class WrapperComponent implements OnInit, OnChanges {
       MasterFieldsArray.push(this.MasterFields[0][item]);
     });
     this.AllOptions = [
-      { name: 'Board', terms: this.FrameworksOptionArray },
+      { name: this.FrameworkFieldName, terms: this.FrameworksOptionArray },
       ...MasterFieldsArray,
       ...this.FilterOptionsData,
     ];
@@ -350,7 +370,7 @@ export class WrapperComponent implements OnInit, OnChanges {
 
   LOG(a: any) {
     const ele = a[0];
-    if (ele.name === 'Board') {
+    if (ele.name === this.FrameworkFieldName) {
       this.Framework = ele.value.length === 0 ? 'CBSE' : ele.value[0];
     }
     let flag = true;
@@ -363,8 +383,8 @@ export class WrapperComponent implements OnInit, OnChanges {
       this.AllFiltersArray.push(ele);
     } else {
       this.AllFiltersArray.map((item: any) => {
-        if (ele.name === 'Board') {
-          if (item.name === 'Board') {
+        if (ele.name === this.FrameworkFieldName) {
+          if (item.name === this.FrameworkFieldName) {
             if (item.value[0] === ele.value[0]) {
               item.value = [];
             } else {
@@ -395,11 +415,12 @@ export class WrapperComponent implements OnInit, OnChanges {
     // }
     // if(this.AllFiltersArray.length!==0){
     //   this.AllFiltersArray.map((item:any)=>{
-    //     if(item.name==='Board'){
+    //     if(item.name===this.FrameworkFieldName){
     //     }
     //   })
     // }
     this.FiltersArray = this.AllFiltersArray;
+
     this.MasterBodyContentChange();
     this.DependentFieldsRender();
     this.FrameWorksFetch();
@@ -411,7 +432,7 @@ export class WrapperComponent implements OnInit, OnChanges {
       MasterFieldsArray.push(this.MasterFields[0][item]);
     });
     this.AllOptions = [
-      { name: 'Board', terms: this.FrameworksOptionArray },
+      { name: this.FrameworkFieldName, terms: this.FrameworksOptionArray },
       ...MasterFieldsArray,
       ...this.FilterOptionsData,
     ];

@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { FiltersArraySelectedOptionObject } from '../../Interfaces/interfaces';
 
 @Component({
@@ -6,7 +14,7 @@ import { FiltersArraySelectedOptionObject } from '../../Interfaces/interfaces';
   templateUrl: './filters-component.component.html',
   styleUrls: ['./filters-component.component.css'],
 })
-export class FiltersComponentComponent implements OnInit {
+export class FiltersComponentComponent implements OnInit, OnChanges {
   Show: string = '';
   @Input() Data: string = '';
   @Output() FiltersArrayEvent = new EventEmitter<
@@ -43,7 +51,7 @@ export class FiltersComponentComponent implements OnInit {
 
   isSelected(optionName: string) {
     let flag = true;
-    this.FiltersArray.map((item) => {
+    this.AllFiltersArray.map((item) => {
       if (
         item.name.toLowerCase() === optionName.toLowerCase() &&
         item.value.length !== 0
@@ -90,9 +98,6 @@ export class FiltersComponentComponent implements OnInit {
     return flag;
   }
 
-  Reset() {
-    this.FiltersArray = [];
-  }
   Check: any = [];
   IsSingleSelect(OptionName: string) {
     let flag = false;
@@ -163,4 +168,5 @@ export class FiltersComponentComponent implements OnInit {
   ngOnInit(): void {
     this.OptionShowHide();
   }
+  ngOnChanges(changes: SimpleChanges): void {}
 }
