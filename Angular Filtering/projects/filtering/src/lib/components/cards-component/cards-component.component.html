@@ -1,0 +1,36 @@
+<div>
+  <div class="Container">
+    <div class="TopContent">
+      <div>
+        <p class="Link" style="font-size: 18px;">{{ this.name }}</p>
+        <p class="Type">{{ this.type }}</p>
+      </div>
+      <div class="ImageDiv">
+        <img
+          class="Image"
+          [src]="
+            this.image ||
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png'
+          "
+        />
+      </div>
+    </div>
+    <div>
+      <div class="TagsDiv" *ngIf="tags.length">
+        <ng-container *ngFor="let tag of this.tags">
+          <div *ngIf="tag" class="Tags">{{ tag }}</div>
+        </ng-container>
+      </div>
+      <div class="LowerDiv">
+        <div class="LowerItem" *ngIf="subject">
+          <dt class="DescType">Subject</dt>
+          <dd class="DetailDesc">{{ subject }}</dd>
+        </div>
+        <div class="LowerItem" *ngIf="publisher">
+          <dt class="DescType">Publisher</dt>
+          <dd class="DetailDesc">{{ this.publisher }}</dd>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

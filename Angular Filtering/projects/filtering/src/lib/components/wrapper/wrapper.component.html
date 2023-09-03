@@ -1,0 +1,47 @@
+<div class="mainDiv">
+  <button class="button" (click)="FilterShow()">Filter</button>
+  <div id="sidebar" class="faKsuq hide">
+    <button class="reset" (click)="Reset()">Reset</button>
+    <div class="sidebar" *ngIf="AllOptions.length !== 0">
+      <div *ngFor="let Field of AllOptions">
+        <lib-filters-component
+          [Name]="Field.name"
+          [OptionValue]="Field.terms"
+          (FiltersArrayEvent)="LOG($event)"
+          [AddtionalFilterConfig]="AddtionalFilterConfig"
+          [FilterConfig]="FilterConfig"
+          [AllFiltersArray]="AllFiltersArray"
+        >
+        </lib-filters-component>
+      </div>
+    </div>
+  </div>
+  <div class="listDiv">
+    <ng-container *ngIf="AddtionalContent.length === 0">
+      <div *ngFor="let item of content">
+        <lib-cards-component
+          [name]="this.CardsFieldCheck('name', item)"
+          [image]="this.CardsFieldCheck('image', item)"
+          [type]="this.CardsFieldCheck('type', item)"
+          [subject]="this.CardsFieldCheck('subject', item)"
+          [tags]="this.CardsFieldCheck('tags', item)"
+          [publisher]="this.CardsFieldCheck('publisher', item)"
+        >
+        </lib-cards-component>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="AddtionalContent.length !== 0">
+      <div *ngFor="let item of AddtionalContent">
+        <lib-cards-component
+          [name]="this.CardsFieldCheck('name', item)"
+          [image]="this.CardsFieldCheck('image', item)"
+          [type]="this.CardsFieldCheck('type', item)"
+          [subject]="this.CardsFieldCheck('subject', item)"
+          [tags]="this.CardsFieldCheck('tags', item)"
+          [publisher]="this.CardsFieldCheck('publisher', item)"
+        >
+        </lib-cards-component>
+      </div>
+    </ng-container>
+  </div>
+</div>
