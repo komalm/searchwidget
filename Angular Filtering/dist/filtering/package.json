@@ -1,0 +1,20 @@
+{
+  "name": "filtering-angular-package",
+  "version": "0.0.5",
+  "peerDependencies": {
+    "@angular/common": "^11.2.14",
+    "@angular/core": "^11.2.14"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0",
+    "@angular/material": "^16.2.0"
+  },
+  "main": "bundles/filtering-angular-package.umd.js",
+  "module": "fesm2015/filtering-angular-package.js",
+  "es2015": "fesm2015/filtering-angular-package.js",
+  "esm2015": "esm2015/filtering-angular-package.js",
+  "fesm2015": "fesm2015/filtering-angular-package.js",
+  "typings": "filtering-angular-package.d.ts",
+  "metadata": "filtering-angular-package.metadata.json",
+  "sideEffects": false
+}
