@@ -1,0 +1,5 @@
+/*
+ * Public API Surface of filtering
+ */
+export * from './lib/filtering.module';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljLWFwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3Byb2plY3RzL2ZpbHRlcmluZy9zcmMvcHVibGljLWFwaS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTs7R0FFRztBQUNILGNBQWMsd0JBQXdCLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuICogUHVibGljIEFQSSBTdXJmYWNlIG9mIGZpbHRlcmluZ1xuICovXG5leHBvcnQgKiBmcm9tICcuL2xpYi9maWx0ZXJpbmcubW9kdWxlJztcbiJdfQ==
