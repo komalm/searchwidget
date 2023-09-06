@@ -1,10 +1,6 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { styled } from 'styled-components';
-
-export interface FilterProps {
-  stylesFilterDiv?: {};
-  children: ReactNode;
-}
+import {FilterProps} from "../../interfaces/interface"
 
 const MainDiv = styled.div`
   background: #e9e8d9;
@@ -13,7 +9,7 @@ const MainDiv = styled.div`
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  row-gap: 15px;
+  row-gap: 8px;
 `;
 
 export const Filter = ({ children, stylesFilterDiv }: FilterProps) => {
