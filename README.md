@@ -1,2 +1,11 @@
-# searchwidget
-Currently the search filters in Sunbird only supports the BMGS (Board , Medium , Grade , Subject) values. This is a problem, which will impact the discoverability of the contents in scenarios where the framework is using other categories. Additionally, it should be possible to filter the content by other other schema fields like audience etc.
+# Sunbird Filtering Packages
+
+## React Filtering Package
+- [NPM Package](https://www.npmjs.com/package/filtering-package)
+- [Organization Repo](https://github.com/tekdi/searchwidget-react)
+- [Documentation](./React%20Filtering%20Package/README.md)
+
+## Angular Filtering Package
+- [NPM Package](https://www.npmjs.com/package/angular-sunbird-filtering)
+- [Organization Repo](https://github.com/tekdi/searchwidget-angular)
+- [Documentation](./Angular%20Filtering%20Package/README.md)
